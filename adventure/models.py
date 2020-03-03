@@ -12,25 +12,11 @@ class Room(models.Model):
     s_to = models.IntegerField(default=0)
     e_to = models.IntegerField(default=0)
     w_to = models.IntegerField(default=0)
-    def connectRooms(self, destinationRoom, direction):
-        destinationRoomID = destinationRoom.id
-        try:
-            destinationRoom = Room.objects.get(id=destinationRoomID)
-        except Room.DoesNotExist:
-            print("That room does not exist")
-        else:
-            if direction == "n":
-                self.n_to = destinationRoomID
-            elif direction == "s":
-                self.s_to = destinationRoomID
-            elif direction == "e":
-                self.e_to = destinationRoomID
-            elif direction == "w":
-                self.w_to = destinationRoomID
-            else:
-                print("Invalid direction")
-                return
-            self.save()
+    coordinateX = models.IntegerField(default=0)
+    coordinateY = models.IntegerField(default=0)
+    isWall = models.BooleanField(default=True)
+    workedOn = models.BooleanField(default=False)
+
     def playerNames(self, currentPlayerID):
         return [p.user.username for p in Player.objects.filter(currentRoom=self.id) if p.id != int(currentPlayerID)]
     def playerUUIDs(self, currentPlayerID):
@@ -61,6 +47,8 @@ def create_user_player(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_player(sender, instance, **kwargs):
     instance.player.save()
+
+
 
 
 
