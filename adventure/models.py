@@ -64,5 +64,3 @@ def save_user_player(sender, instance, **kwargs):
 
 
 
-
-
