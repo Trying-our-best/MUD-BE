@@ -25,8 +25,7 @@ def initialize(request):
 @csrf_exempt
 @api_view(["GET"])
 def getGameMap(request):
-    allRooms = Room.objects.all()
-    # allRooms.order_by('pk')
+    allRooms = Room.objects.all().order_by("id")
 
     maxCoordX = 0
     maxCoordY = 0
