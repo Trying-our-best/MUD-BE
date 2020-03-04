@@ -26,6 +26,7 @@ def initialize(request):
 @api_view(["GET"])
 def getGameMap(request):
     allRooms = Room.objects.all()
+    # allRooms.order_by('pk')
 
     maxCoordX = 0
     maxCoordY = 0
