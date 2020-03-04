@@ -54,59 +54,6 @@ class Maze:
         self.mazeString = ""        #A string describing the Maze in a pseudo graphical manner, gets generated everytime __str__() gets called
         
         
-        
-        
-    def __str__(self): 
-        """ Generates the mazeString which is a string with as many columns as sizeX and as many lines as sizeY.
-            The cells are filled with the conenction of the tile at these coordinates.
-        """
-        
-        self.mazeString = ""
-        self.mazeArr = []
-        
-        for i in range(len(self.mazeList) * 2 + 1):
-            self.mazeArr.append([None] * (2 * len(self.mazeList[0]) + 1))
-
-        for i in range(len(self.mazeArr)):
-            for j in range(len(self.mazeArr[i])):
-                if i % 2 == 0:
-                    self.mazeArr[i][j] = 0
-                
-        for i, row in enumerate(self.mazeList):
-            for j, tile in enumerate(row):
-                #Print Entrance and in Between Rooms
-                if tile.n_to == 1:
-                    self.mazeArr[i * 2][j * 2 + 1] = 1   
-                
-                #Print Exit to South
-                if i == len(self.mazeList) - 1 and tile.s_to == 1:
-                    print(len(self.mazeList)*2+1)
-                    self.mazeArr[len(self.mazeList)*2][j*2 + 1] = 1
-
-                #East Wall
-                if j == 0:
-                    self.mazeArr[i*2+1][j] = 0
-
-                #east-west connection
-                if j > 0:
-                    if row[j-1].e_to == 1 and row[j].w_to == 1:
-                        self.mazeArr[i*2+1][j*2] = 1
-                    else: 
-                        self.mazeArr[i*2+1][j*2] = 0
-
-                #current room
-                self.mazeArr[i*2 + 1][j*2+1] = 1
-
-                #West Wall
-                if j == len(row) - 1:
-                    self.mazeArr[i*2 + 1][j*2+2] = 0
-
-        print(self.mazeArr)
-        
-        return self.mazeString
-        
-            
-        
     def __repr__(self): 
         """ Generates a representing string
         """
@@ -200,13 +147,16 @@ class Maze:
             
             tile = rnd.choice(self.mazeList[0])
             tile.n_to = 1
+            tile.save()
                     
             tile = rnd.choice(self.mazeList[-1])
             tile.s_to = 1
+            tile.save()
         else:
             self.mazeList[0][0].n_to = 1
             self.mazeList[-1][-1].s_to = 1
-            
+            self.mazeList[0][0].save()
+            self.mazeList[-1][-1].save()
         return True
                 
     def makeMazeSimple(self): 
