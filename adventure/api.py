@@ -61,11 +61,11 @@ def getGameMap(request):
     for i, row in enumerate(roomArr):
             for j, tile in enumerate(row):
                 #Print Entrance and in Between Rooms
-                if tile.n_to == 1:
+                if tile.n_to > 0 or tile.n_to < 0:
                     gameMap[i * 2][j * 2 + 1] = 1   
                 
                 #Print Exit to South
-                if i == len(roomArr) - 1 and tile.s_to == 1:
+                if i == len(roomArr) - 1 and tile.s_to == -2:
                     gameMap[len(roomArr)*2][j*2 + 1] = 1
 
                 #East Wall
@@ -74,7 +74,7 @@ def getGameMap(request):
 
                 #east-west connection
                 if j > 0:
-                    if row[j-1].e_to == 1 and row[j].w_to == 1:
+                    if row[j-1].e_to > 0 and row[j].w_to > 0:
                         gameMap[i*2+1][j*2] = 1
                     else: 
                         gameMap[i*2+1][j*2] = 0
@@ -89,7 +89,7 @@ def getGameMap(request):
 
     return JsonResponse({'gameMap': gameMap}, safe=True)
 
-# @csrf_exempt
+@csrf_exempt
 @api_view(["POST"])
 def move(request):
     dirs={"n": "north", "s": "south", "e": "east", "w": "west"}
@@ -109,7 +109,11 @@ def move(request):
         nextRoomID = room.e_to
     elif direction == "w":
         nextRoomID = room.w_to
-    if nextRoomID is not None and nextRoomID > 0:
+    if nextRoomID == -1:
+        return JsonResponse({'message': "That's the entrance, find the exit"})
+    elif nextRoomID == -2:
+        return JsonResponse({'message': "Congrats you made it to the exit"})
+    elif nextRoomID is not None and nextRoomID > 0:
         nextRoom = Room.objects.get(id=nextRoomID)
         player.currentRoom=nextRoomID
         player.save()
@@ -120,10 +124,10 @@ def move(request):
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
         # for p_uuid in nextPlayerUUIDs:
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
-        return JsonResponse({'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'players':players, 'error_msg':""}, safe=True)
+        return JsonResponse({'name':player.user.username, 'id': nextRoom.id, 'title':nextRoom.title, 'description':nextRoom.description, 'players':players, 'error_msg':""}, safe=True)
     else:
         players = room.playerNames(player_id)
-        return JsonResponse({'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
+        return JsonResponse({'name':player.user.username, 'id': room.id, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
 
 
 @csrf_exempt
