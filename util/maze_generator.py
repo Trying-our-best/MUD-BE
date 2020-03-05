@@ -116,21 +116,21 @@ class Maze:
         if X1 == X2:
             
             if Y1 < Y2:
-                tileA.s_to = 1
-                tileB.n_to = 1
+                tileA.s_to = tileB.id
+                tileB.n_to = tileA.id
             
             elif Y1 > Y2:
-                tileA.n_to = 1
-                tileB.s_to = 1
+                tileA.n_to = tileB.id
+                tileB.s_to = tileA.id
 
         else:
             if X1 < X2:
-                tileA.e_to = 1
-                tileB.w_to = 1
+                tileA.e_to = tileB.id
+                tileB.w_to = tileA.id
             
             else:
-                tileA.w_to = 1
-                tileB.e_to = 1
+                tileA.w_to = tileB.id
+                tileB.e_to = tileA.id
         
         tileA.save()
         tileB.save()
@@ -146,15 +146,15 @@ class Maze:
         if random:
             
             tile = rnd.choice(self.mazeList[0])
-            tile.n_to = 1
+            tile.n_to = -1
             tile.save()
                     
             tile = rnd.choice(self.mazeList[-1])
-            tile.s_to = 1
+            tile.s_to = -2
             tile.save()
         else:
-            self.mazeList[0][0].n_to = 1
-            self.mazeList[-1][-1].s_to = 1
+            self.mazeList[0][0].n_to = -1
+            self.mazeList[-1][-1].s_to = -2
             self.mazeList[0][0].save()
             self.mazeList[-1][-1].save()
         return True
@@ -168,7 +168,7 @@ class Maze:
             templist = []
             
             for indexX in range(0,self.sizeX):
-                newTile = Room(coordinateX = indexX, coordinateY = indexY, isWall = False)
+                newTile = Room(coordinateX = indexX, coordinateY = indexY)
                 newTile.save()
                 templist.append(newTile)
                 

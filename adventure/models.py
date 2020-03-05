@@ -14,7 +14,6 @@ class Room(models.Model):
     w_to = models.IntegerField(default=0)
     coordinateX = models.IntegerField(default=0)
     coordinateY = models.IntegerField(default=0)
-    isWall = models.BooleanField(default=True)
     workedOn = models.BooleanField(default=False)
 
     def playerNames(self, currentPlayerID):
@@ -29,7 +28,11 @@ class Player(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     def initialize(self):
         if self.currentRoom == 0:
-            self.currentRoom = Room.objects.first().id
+            self.allRooms = Room.objects.all().order_by('id')
+            for room in self.allRooms:
+                if room.n_to < 0:
+                    self.currentRoom = room.id
+                    break
             self.save()
     def room(self):
         try:
