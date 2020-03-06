@@ -170,7 +170,6 @@ class Maze:
             
             for indexX in range(0,self.sizeX):
                 title_desc = generate_desc_title()
-                print(title_desc)
                 newTile = Room(title = title_desc['title'], description = title_desc['desc'], coordinateX = indexX, coordinateY = indexY)
                 newTile.save()
                 templist.append(newTile)
