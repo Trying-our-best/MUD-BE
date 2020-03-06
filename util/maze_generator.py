@@ -1,7 +1,4 @@
-"""
-    Written by turidus (github.com/turidus) in python 3.6.0
-    Dependend on Pillow 4.2, a fork of PIL (https://pillow.readthedocs.io/en/4.2.x/index.html)
-"""
+
 import random as rnd
 import re
 from adventure.models import Room, Player
