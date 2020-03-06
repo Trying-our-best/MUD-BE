@@ -40,6 +40,16 @@ class Player(models.Model):
         except Room.DoesNotExist:
             self.initialize()
             return self.room()
+    def reset(self):
+        self.allRooms = Room.objects.all().order_by('id')
+        for room in self.allRooms:
+            if room.n_to < 0:
+                self.currentRoom = room.id
+                break
+        self.save()
+        return Room.objects.get(id=self.currentRoom)
+        
+
 
 @receiver(post_save, sender=User)
 def create_user_player(sender, instance, created, **kwargs):
