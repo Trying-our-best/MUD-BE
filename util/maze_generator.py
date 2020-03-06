@@ -5,6 +5,7 @@
 import random as rnd
 import re
 from adventure.models import Room, Player
+from util.title_generator import generate_desc_title
 
 class Maze:
 
@@ -168,7 +169,9 @@ class Maze:
             templist = []
             
             for indexX in range(0,self.sizeX):
-                newTile = Room(coordinateX = indexX, coordinateY = indexY)
+                title_desc = generate_desc_title()
+                print(title_desc)
+                newTile = Room(title = title_desc['title'], description = title_desc['desc'], coordinateX = indexX, coordinateY = indexY)
                 newTile.save()
                 templist.append(newTile)
                 
