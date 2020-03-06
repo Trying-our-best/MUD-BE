@@ -24,6 +24,17 @@ def initialize(request):
 
 @csrf_exempt
 @api_view(["GET"])
+def reset(request):
+    user = request.user
+    player = user.player
+    player_id = player.id
+    uuid = player.uuid
+    room = player.reset()
+    players = room.playerNames(player_id)
+    return JsonResponse({'uuid': uuid, 'name':player.user.username, 'title':room.title, 'description':room.description, "x": room.coordinateX, "y": room.coordinateY, 'players':players}, safe=True)
+
+@csrf_exempt
+@api_view(["GET"])
 def getGameMap(request):
     allRooms = Room.objects.all().order_by("id")
 
